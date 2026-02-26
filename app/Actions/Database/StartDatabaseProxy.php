@@ -35,6 +35,10 @@ class StartDatabaseProxy
             $server = data_get($database, 'service.destination.server');
             $containerName = "{$database->name}-{$database->service->uuid}";
         }
+
+        // Reuse server dynamic timeout as stream proxy idle timeout so long-running DB sessions don't drop unexpectedly.
+        // Kept configurable from server advanced settings.
+        $proxyTimeoutSeconds = max(600, (int) data_get($server, 'settings.dynamic_timeout', 3600));
         $internalPort = match ($databaseType) {
             'standalone-mariadb', 'standalone-mysql' => 3306,
             'standalone-postgresql', 'standalone-supabase/postgres' => 5432,
@@ -66,6 +70,8 @@ class StartDatabaseProxy
     stream {
        server {
             listen $database->public_port;
+            proxy_connect_timeout 30s;
+            proxy_timeout {$proxyTimeoutSeconds}s;
             proxy_pass $containerName:$internalPort;
        }
     }

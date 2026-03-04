@@ -34,8 +34,8 @@
                             label="Number of concurrent builds" required
                             helper="You can specify the number of simultaneous build processes/deployments that should run concurrently." />
                         <x-forms.input canGate="update" :canResource="$server" id="dynamicTimeout"
-                            label="Deployment timeout (seconds)" required
-                            helper="You can define the maximum duration for a deployment to run before timing it out." />
+                            label="Deployment & DB proxy timeout (seconds)" required
+                            helper="Defines the server-level timeout used by deployments and database public proxy streams before timing out." />
                         <x-forms.input canGate="update" :canResource="$server" id="deploymentQueueLimit"
                             label="Deployment queue limit" required
                             helper="Maximum number of queued deployments allowed. New deployments will be rejected with a 429 status when the limit is reached." />
